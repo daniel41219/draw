@@ -11,6 +11,7 @@ const CDN = {
   'lib/paper-core.min.js': 'https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.17/paper-core.min.js',
   'lib/jspdf.umd.min.js': 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
   'lib/svg2pdf.umd.min.js': 'https://cdn.jsdelivr.net/npm/svg2pdf.js@2.2.3/dist/svg2pdf.umd.min.js',
+  'lib/opentype.min.js': 'https://cdnjs.cloudflare.com/ajax/libs/opentype.js/1.3.4/opentype.min.js',
 };
 for (const [k, v] of Object.entries(CDN)) src = src.split(k).join(v);
 fs.mkdirSync(path.dirname(to), { recursive: true });

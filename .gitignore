@@ -1,16 +1,27 @@
-# Developer tools' files
+# Ferramentas de desenvolvimento
 .lite_workspace.lua
+.vscode/
 
-# Neutralinojs binaries and builds
+# Binários e builds do Neutralinojs
 /bin
 /dist
+/extensions
+.storage
+*.log
 
-# Neutralinojs client (minified)
+# Cliente do Neutralinojs (baixado pelo "neu update")
 neutralino.js
+neutralino.d.ts
+
+# Gerados pelo installer\build-desktop.ps1 a partir de src\draw.html
+/resources/index.html
+/resources/lib/paper-core.min.js
+/resources/lib/jspdf.umd.min.js
+/resources/lib/svg2pdf.umd.min.js
+/resources/lib/opentype.min.js
 
 # Dependências do build (npm install em installer/tools)
 node_modules/
 
-# Neutralinojs related files
-.storage
-*.log
+# Backups locais
+backup-*/

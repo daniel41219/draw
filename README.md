@@ -38,10 +38,11 @@ Quem trabalha com comunicação visual, gráfica rápida, convites, adesivos ou 
 
 | Grupo | O que tem |
 |---|---|
-| Desenho | Seleção, forma, mão livre, caneta (Bézier), linha, retângulo, elipse, polígono, estrela, espiral, texto |
-| Edição | Faca, borracha, recortar, editar nós, PowerClip, grade, cotas |
-| Efeitos | Sombreamento, contorno concêntrico, mistura, distorção, extrusão, transparência, lentes |
-| Cor | Preenchimento interativo, conta-gotas de atributos, paleta com cores de processo (CMYK aproximado) |
+| Desenho | Seleção, forma, mão livre, Bézier, B-Spline, polilinha, curva de 3 pontos, linha, retângulo e elipse (também de 3 pontos), polígono, estrela, espiral, formas comuns (setas, coração, balão, nuvem…), texto, tabela |
+| Edição | Faca, borracha, recortar, exclusão de segmento virtual, editar nós, suavizar, borrar, girar, atrair, repelir, rugosidade, PowerClip, grade, cotas (paralela, horizontal/vertical, angular), chamada, conector |
+| Efeitos | Sombreamento, contorno concêntrico, mistura, distorção, envelope, extrusão, transparência, lentes |
+| Cor | Preenchimento interativo e inteligente, conta-gotas de cor e de atributos, paleta com cores de processo (CMYK aproximado) |
+| Texto | Clique duplo edita no lugar, Ctrl+Q converte em curvas (fontes do Google, do Windows e importadas) |
 | Organização | Várias páginas, gerenciador de objetos (ocultar, travar, renomear), guias, encaixe, alinhar e distribuir |
 | Arquivos | Projeto `.draw`, importar `.cdr` / `.svg` / PNG / JPG / WebP, exportar PDF, SVG, EPS, PNG e pacote `.zip` |
 
@@ -63,13 +64,15 @@ Atalhos de teclado conhecidos: `F2`/`F3` zoom, `F12` caneta de contorno, `Shift+
 
 O editor inteiro é um único arquivo, `src/draw.html`. O programa de computador usa o [Neutralinojs](https://neutralino.js.org) com o WebView do sistema (WebView2 no Windows, WebKitGTK no Linux), por isso fica tão pequeno.
 
-Requisitos: Windows com PowerShell e [Node.js](https://nodejs.org).
+Para gerar o programa e o site, você precisa de Windows com PowerShell e [Node.js](https://nodejs.org):
 
 ```powershell
+git clone https://github.com/daniel41219/draw.git
+cd draw
 cd installer\tools
 npm install
-cd ..
-powershell -ExecutionPolicy Bypass -File build-all.ps1 -App <pasta do draw-app> -Site <pasta de saída do site>
+cd ..\..
+powershell -ExecutionPolicy Bypass -File installer\build-all.ps1
 ```
 
 O script gera, a partir de `src/draw.html`:
@@ -77,18 +80,26 @@ O script gera, a partir de `src/draw.html`:
 - os executáveis para Windows, Linux e macOS (`dist/`)
 - o instalador do Windows (Inno Setup)
 - os pacotes `.deb` e `.tar.gz` para Linux
-- o site estático, pronto para qualquer hospedagem
+- o site estático em `..\draw-site` (ao lado do repositório), pronto para qualquer hospedagem
+
+Use `-Site <pasta>` para gerar o site em outro lugar. Na primeira vez, o script baixa sozinho o Neutralinojs e as bibliotecas (paper.js, jsPDF, svg2pdf.js, opentype.js).
 
 ## Estrutura
 
 ```
-src/draw.html            o editor (fonte única)
-resources/               o que vai embutido no programa
-  lib/cdr-import.js      leitor de arquivos .cdr
-  lib/paper-core.min.js  motor vetorial (paper.js)
-  lib/jspdf, svg2pdf     exportação para PDF
-installer/               scripts de build, instalador e ícones
-neutralino.config.json   configuração da janela do programa
+src/draw.html              o editor (fonte única)
+resources/                 o que vai embutido no programa
+  lib/cdr-import.js        leitor de arquivos .cdr
+  lib/fonts/               fontes para converter texto em curvas sem internet
+  icons/appIcon.png        ícone da janela
+installer/                 scripts de build, instalador e ícones
+  build-all.ps1            gera tudo de uma vez
+  build-desktop.ps1        monta resources/index.html para o programa
+  build-site.ps1           monta o site estático (com uso offline)
+  build-linux.js           pacotes .deb e .tar.gz
+  draw-setup.iss           instalador do Windows (Inno Setup)
+  tools/package.json       dependências do build (npm install)
+neutralino.config.json     configuração da janela do programa
 ```
 
 ## Contribua
