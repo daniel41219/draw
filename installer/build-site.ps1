@@ -1,14 +1,17 @@
-# Gera a versão independente do Draw (site estático) a partir do arquivo do artifact.
-param([string]$Src, [string]$Out)
+# Gera o site estático: a página de apresentação (site\) na raiz e o editor em app\.
+param([string]$Src, [string]$Out, [string]$Landing = (Join-Path (Split-Path $PSScriptRoot) 'site'))
 $ErrorActionPreference = 'Stop'
 $utf8 = New-Object Text.UTF8Encoding $false
 $page = [IO.File]::ReadAllText($Src)
+$Root = $Out; $Out = Join-Path $Root 'app'
 
 # Tudo antes de <div id="app"> (título, fontes, scripts de bibliotecas e CSS) vai para o <head>
 $cut = $page.IndexOf('<div id="app">')
 if ($cut -lt 0) { throw 'marcador <div id="app"> não encontrado' }
 $headPart = $page.Substring(0, $cut).Trim()
 $bodyPart = $page.Substring($cut).Trim()
+# o editor fica em app\, os instaladores continuam em downloads\ na raiz
+$bodyPart = $bodyPart.Replace('href="downloads/${href}"', 'href="../downloads/${href}"')
 
 $version = (Get-Date).ToString('yyyyMMddHHmm')
 $html = @"
@@ -97,4 +100,18 @@ self.addEventListener('fetch', e => {
 });
 "@
 [IO.File]::WriteAllText("$Out\sw.js", $sw, $utf8)
+
+# página de apresentação na raiz
+if (Test-Path $Landing) { Copy-Item "$Landing\*" $Root -Recurse -Force }
+# Versões antigas instalaram um service worker na raiz (quando o editor ficava lá): este se desinstala
+# e recarrega as abas abertas, para quem já visitou ver a página nova.
+$killSw = @'
+self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('activate', e => e.waitUntil(
+  caches.keys().then(ks => Promise.all(ks.map(k => caches.delete(k))))
+    .then(() => self.registration.unregister())
+    .then(() => self.clients.matchAll({ type: 'window' }))
+    .then(cs => cs.forEach(c => c.navigate(c.url)))));
+'@
+[IO.File]::WriteAllText("$Root\sw.js", $killSw, $utf8)
 "ok $version"

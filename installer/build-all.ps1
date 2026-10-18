@@ -8,12 +8,12 @@ $src = "$App\src\draw.html"
 if (-not (Test-Path $src)) { node "$inst\make-src.js" "$App\resources\index.html" $src; if ($LASTEXITCODE) { throw 'make-src' } }
 if (-not (Test-Path $tools)) { throw "rode 'npm install' em $inst\tools antes" }
 
-# 1. programa (resources/index.html + neutralino.config.json) e site
+# 1. programa (resources/index.html + neutralino.config.json) e site (apresentação na raiz, editor em app\)
 & "$inst\build-desktop.ps1" -Src $src -App $App -Icon "$inst\draw.png"
 & "$inst\build-site.ps1" -Src $src -Out $Site
-New-Item -ItemType Directory -Force "$Site\lib" | Out-Null
-Copy-Item "$App\resources\lib\cdr-import.js" "$Site\lib\cdr-import.js" -Force
-foreach ($i in 'icon-192.png', 'icon-512.png') { if (-not (Test-Path "$Site\$i")) { Copy-Item "$inst\draw.png" "$Site\$i" } }
+New-Item -ItemType Directory -Force "$Site\app\lib" | Out-Null
+Copy-Item "$App\resources\lib\cdr-import.js" "$Site\app\lib\cdr-import.js" -Force
+foreach ($i in 'icon-192.png', 'icon-512.png') { if (-not (Test-Path "$Site\app\$i")) { Copy-Item "$inst\draw.png" "$Site\app\$i" } }
 
 # 2. binários do Neutralino com os arquivos embutidos (baixa o Neutralino na primeira vez)
 Push-Location $App

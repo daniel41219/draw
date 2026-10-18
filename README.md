@@ -10,7 +10,8 @@
 </p>
 
 <p align="center">
-  <a href="https://draw.mais.live"><b>▶ Usar agora no navegador</b></a> ·
+  <a href="https://draw.mais.live/app/"><b>▶ Usar agora no navegador</b></a> ·
+  <a href="https://draw.mais.live">Site</a> ·
   <a href="https://draw.mais.live/downloads/Draw-Setup.exe">Baixar para Windows</a> ·
   <a href="https://draw.mais.live/downloads/draw_1.0.0_amd64.deb">Baixar para Linux</a>
 </p>
@@ -80,7 +81,7 @@ O script gera, a partir de `src/draw.html`:
 - os executáveis para Windows, Linux e macOS (`dist/`)
 - o instalador do Windows (Inno Setup)
 - os pacotes `.deb` e `.tar.gz` para Linux
-- o site estático em `..\draw-site` (ao lado do repositório), pronto para qualquer hospedagem
+- o site estático em `..\draw-site` (ao lado do repositório), pronto para qualquer hospedagem: a página de apresentação na raiz e o editor em `app/`
 
 Use `-Site <pasta>` para gerar o site em outro lugar. Na primeira vez, o script baixa sozinho o Neutralinojs e as bibliotecas (paper.js, jsPDF, svg2pdf.js, opentype.js).
 
@@ -92,10 +93,11 @@ resources/                 o que vai embutido no programa
   lib/cdr-import.js        leitor de arquivos .cdr
   lib/fonts/               fontes para converter texto em curvas sem internet
   icons/appIcon.png        ícone da janela
+site/                      página de apresentação (draw.mais.live) e o vídeo de demonstração
 installer/                 scripts de build, instalador e ícones
   build-all.ps1            gera tudo de uma vez
   build-desktop.ps1        monta resources/index.html para o programa
-  build-site.ps1           monta o site estático (com uso offline)
+  build-site.ps1           monta o site: apresentação + editor em app/ (com uso offline)
   build-linux.js           pacotes .deb e .tar.gz
   draw-setup.iss           instalador do Windows (Inno Setup)
   tools/package.json       dependências do build (npm install)
